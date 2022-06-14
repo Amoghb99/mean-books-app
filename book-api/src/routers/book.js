@@ -1,5 +1,5 @@
 const express = require('express');
-const router= new express.Router();
+const router= express.Router();
 const Book= require('../models/book');
 
 router.get('/books', async(req,res)=>{
@@ -23,4 +23,33 @@ router.post('/books',async (req,res) => {
         res.status(500).send(error);
     }
 })
+
+router.route('/update/:id').put((req,res)=>{
+    Book.findByIdAndUpdate(req.params.id,{$set: req.body},(error,data)=>{
+        if(error){
+            return next(error);
+        } else{
+            res.json(data);
+            console.log("Updated");
+        }
+})
+});
+
+router.route('/delete/:id').delete((req,res)=>{
+    Book.findByIdAndDelete(req.params.id,(error,data)=>{
+    if(error){
+        return next(error);
+    } else{
+       res.status(200).json({
+        msg:data
+       })
+    }
+       
+})
+});
+
+
+
+
+
 module.exports = router;
